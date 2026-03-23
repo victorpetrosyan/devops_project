@@ -27,7 +27,7 @@ const Home = () => {
   return (
     <div className={styles.container}>
       <div className={styles.hero}>
-        <h1>Welcome to DevShop</h1>
+        <h1>Welcome to DevShop!!!</h1>
         <p>Quality products, deployed with Kubernetes ☸️</p>
       </div>
 
