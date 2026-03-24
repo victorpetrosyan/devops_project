@@ -28,7 +28,7 @@ const Home = () => {
     <div className={styles.container}>
       <div className={styles.hero}>
         <h1>Welcome to DevShop!!!</h1>
-        <p>Quality products, deployed with Kubernetes ☸️</p>
+        <p>Quality products, deployed with Kubernetes :D ☸️</p>
       </div>
 
       <div className={styles.filters}>

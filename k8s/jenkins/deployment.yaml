@@ -15,22 +15,30 @@ spec:
     spec:
       serviceAccountName: jenkins
       securityContext:
-        fsGroup: 1000
-        runAsUser: 1000
-      dnsConfig:
-        nameservers:
-          - 8.8.8.8
-          - 8.8.4.4
+        fsGroup: 0
+        runAsUser: 0
+      initContainers:
+        - name: install-docker
+          image: docker:24-cli
+          command: ["cp", "/usr/local/bin/docker", "/docker-bin/docker"]
+          volumeMounts:
+            - name: docker-bin
+              mountPath: /docker-bin
       containers:
         - name: jenkins
-          image: jenkins/jenkins:lts
+          image: jenkins/jenkins:lts-jdk17
           ports:
-            - containerPort: 8080   # web UI
-            - containerPort: 50000  # agents
+            - containerPort: 8080
+            - containerPort: 50000
           volumeMounts:
             - name: jenkins-storage
               mountPath: /var/jenkins_home
               subPath: jenkins
+            - name: docker-socket
+              mountPath: /var/run/docker.sock
+            - name: docker-bin
+              mountPath: /usr/local/bin/docker
+              subPath: docker
           readinessProbe:
             httpGet:
               path: /login
@@ -47,6 +55,11 @@ spec:
         - name: jenkins-storage
           persistentVolumeClaim:
             claimName: jenkins-pvc
+        - name: docker-socket
+          hostPath:
+            path: /var/run/docker.sock
+        - name: docker-bin
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
