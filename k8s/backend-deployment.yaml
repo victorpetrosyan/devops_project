@@ -20,11 +20,17 @@ spec:
             - containerPort: 5000
           env:
             - name: PORT
-              value: "5000"
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secrets
+                  key: PORT
             - name: DB_HOST
               value: "postgres-service"
             - name: DB_PORT
-              value: "5432"
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secrets
+                  key: DB_PORT
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
