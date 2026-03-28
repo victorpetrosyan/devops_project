@@ -1,6 +1,6 @@
-const pool = require("./index");
+import { pool } from "./index.js"; 
 
-const init = async () => {
+export const init = async () => {
   await pool.query(`
     CREATE TABLE IF NOT EXISTS cart (
       id SERIAL PRIMARY KEY,
@@ -41,4 +41,4 @@ const init = async () => {
   }
 };
 
-module.exports = init;
+

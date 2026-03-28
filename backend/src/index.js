@@ -1,6 +1,10 @@
-const express = require("express");
-const cors = require("cors");
-const initDb = require("./db/seed");
+import 'dotenv/config';
+import express from 'express'
+import cors from 'cors'
+import { init } from "./db/seed.js"
+import productsRouter from './routes/products.js'
+import cartRouter from './routes/cart.js'
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -12,13 +16,13 @@ app.use(express.json());
 app.get("/health", (req, res) => res.json({ status: "ok" }));
 
 // Routes
-app.use("/api/products", require("./routes/products"));
-app.use("/api/cart", require("./routes/cart"));
+app.use("/api/products", productsRouter);
+app.use("/api/cart", cartRouter);
 
 // Start server
 const start = async () => {
   try {
-    await initDb();
+    await init();
     app.listen(PORT, () => {
       console.log(`Backend running on port ${PORT}`);
     });

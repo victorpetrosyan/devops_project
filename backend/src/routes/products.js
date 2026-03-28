@@ -1,6 +1,6 @@
-const express = require("express");
+import express from 'express'
+import {pool} from '../db/index.js'
 const router = express.Router();
-const pool = require("../db");
 
 // GET all products (with optional category filter)
 router.get("/", async (req, res) => {
@@ -50,4 +50,4 @@ router.get("/meta/categories", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

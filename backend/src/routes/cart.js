@@ -1,6 +1,6 @@
-const express = require("express");
+import express  from 'express'
+import {pool} from '../db/index.js'
 const router = express.Router();
-const pool = require("../db");
 
 // Cart is session-based (stored in memory per session_id header)
 // In production you'd use Redis, but for a portfolio project this is fine
@@ -88,4 +88,4 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router
