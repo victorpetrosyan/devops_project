@@ -34,10 +34,6 @@ spec:
                 secretKeyRef:
                   name: postgres-secret
                   key: POSTGRES_PASSWORD
-          volumeMounts:
-            - name: postgres-storage
-              mountPath: /var/lib/postgresql/data
-              subPath: postgres
           readinessProbe:
             exec:
               command: ["pg_isready", "-U", "postgres"]
@@ -48,10 +44,6 @@ spec:
               command: ["pg_isready", "-U", "postgres"]
             initialDelaySeconds: 15
             periodSeconds: 10
-      volumes:
-        - name: postgres-storage
-          persistentVolumeClaim:
-            claimName: postgres-pvc
 ---
 apiVersion: v1
 kind: Service
