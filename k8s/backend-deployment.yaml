@@ -15,7 +15,8 @@ spec:
     spec:
       containers:
         - name: backend
-          image: ghcr.io/victorpetrosyan/devops-shop-backend:latest
+          image: registry.gitlab.com/test-group-qw/devops_project/backend:latest
+
           ports:
             - containerPort: 5000
           env:
@@ -58,6 +59,9 @@ spec:
               port: 5000
             initialDelaySeconds: 20
             periodSeconds: 10
+      imagePullSecrets:
+      - name: gitlab-registry-key
+
 ---
 apiVersion: v1
 kind: Service

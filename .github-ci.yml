@@ -1,0 +1,59 @@
+stages:
+  - build
+  - docker
+  - deploy
+
+variables:
+  BACKEND_IMAGE: $CI_REGISTRY_IMAGE/backend:$CI_COMMIT_SHA
+  FRONTEND_IMAGE: $CI_REGISTRY_IMAGE/frontend:$CI_COMMIT_SHA
+
+
+
+
+docker-backend:
+  stage: docker
+  image: docker:latest
+  tags:
+    - ubuntu-runner
+  services:
+    - docker:dind
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker build -t $BACKEND_IMAGE ./backend
+    - docker push $BACKEND_IMAGE
+
+docker-frontend:
+  stage: docker
+  image: docker:latest
+  tags:
+    - ubuntu-runner
+  services:
+    - docker:dind
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker build -t $FRONTEND_IMAGE ./frontend
+    - docker push $FRONTEND_IMAGE
+
+deploy:
+  stage: deploy
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: [""]
+  tags:
+    - ubuntu-runner
+  script:
+    - kubectl config use-context "$KUBE_CONTEXT"
+
+    # update backend
+    - kubectl set image deployment/backend backend=$BACKEND_IMAGE -n $KUBE_NAMESPACE
+
+    # update frontend
+    - kubectl set image deployment/frontend frontend=$FRONTEND_IMAGE -n $KUBE_NAMESPACE
+
+    # wait for rollout
+    - kubectl rollout status deployment/backend -n $KUBE_NAMESPACE
+    - kubectl rollout status deployment/frontend -n $KUBE_NAMESPACE
+
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+  when: manual

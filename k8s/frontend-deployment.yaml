@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: ghcr.io/victorpetrosyan/devops-shop-frontend:latest
+          image: registry.gitlab.com/test-group-qw/devops_project/frontend:latest
           ports:
             - containerPort: 80
           readinessProbe:
@@ -30,6 +30,8 @@ spec:
               port: 80
             initialDelaySeconds: 15
             periodSeconds: 10
+      imagePullSecrets:
+      - name: gitlab-registry-key
 ---
 apiVersion: v1
 kind: Service
