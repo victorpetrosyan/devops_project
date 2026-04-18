@@ -52,8 +52,8 @@ jobs:
       # ☸️ kubeconfig
       - name: Setup kubeconfig
         run: |
-          echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 -d > kubeconfig
-          export KUBECONFIG=$PWD/kubeconfig
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 -d > $HOME/.kube/config
 
       # 🚀 Deploy backend + frontend
       - name: Deploy to Kubernetes
