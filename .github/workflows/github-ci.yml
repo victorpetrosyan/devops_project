@@ -1,18 +1,61 @@
-name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on: [push]
+name: CI-CD
+
+on:
+  push:
+    branches: ["main"]
+
+env:
+  REGISTRY: ghcr.io
+  BACKEND_IMAGE: ghcr.io/${{ github.repository }}/backend:${{ github.sha }}
+  FRONTEND_IMAGE: ghcr.io/${{ github.repository }}/frontend:${{ github.sha }}
+  KUBE_NAMESPACE: shop
+
 jobs:
-  Explore-GitHub-Actions:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - name: Check out repository code
-        uses: actions/checkout@v5
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-      - name: List files in the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 🔐 Login to GHCR
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      # 🐳 Build backend
+      - name: Build backend image
+        run: docker build -t $BACKEND_IMAGE ./backend
+
+      - name: Push backend image
+        run: docker push $BACKEND_IMAGE
+
+      # 🐳 Build frontend
+      - name: Build frontend image
+        run: docker build -t $FRONTEND_IMAGE ./frontend
+
+      - name: Push frontend image
+        run: docker push $FRONTEND_IMAGE
+
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v4
+
+      # ☸️ kubeconfig
+      - name: Setup kubeconfig
         run: |
-          ls ${{ github.workspace }}
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+          echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 -d > kubeconfig
+          export KUBECONFIG=$PWD/kubeconfig
+
+      # 🚀 Deploy backend + frontend
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl set image deployment/backend backend=$BACKEND_IMAGE -n $KUBE_NAMESPACE
+          kubectl set image deployment/frontend frontend=$FRONTEND_IMAGE -n $KUBE_NAMESPACE
+
+          kubectl rollout status deployment/backend -n $KUBE_NAMESPACE
+          kubectl rollout status deployment/frontend -n $KUBE_NAMESPACE
