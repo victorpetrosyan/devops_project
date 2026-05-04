@@ -1,10 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend
-  namespace: shop
+  name: {{ .Release.Name }}-frontend
 spec:
-  replicas: 1
+  replicas: {{ .Values.frontend.replicaCount }}
   selector:
     matchLabels:
       app: frontend
@@ -15,7 +14,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: docker pull ghcr.io/victorpetrosyan/devops_project/frontend:latest
+          image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
           ports:
             - containerPort: 80
           readinessProbe:
@@ -40,7 +39,7 @@ spec:
   selector:
     app: frontend
   ports:
-    - port: 80
-      targetPort: 80
-      nodePort: 30000
+    - port: {{ .Values.frontend.service.port  }}
+      targetPort: {{ .Values.frontend.service.targetPort  }}
+      nodePort: {{ .Values.frontend.service.nodePort  }}
   type: NodePort

@@ -1,0 +1,35 @@
+backend:
+  replicaCount: 1
+  image:
+    repository: ghcr.io/victorpetrosyan/devops_project/backend
+    tag: bb1074064295921a763185fdaca7bfc01bd2e9f1
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 5000
+  env:
+    PORT: 5000
+    DB_PORT: 5432
+
+
+frontend:
+  replicaCount: 1
+  image:
+    repository: ghcr.io/victorpetrosyan/devops_project/frontend
+    tag: bb1074064295921a763185fdaca7bfc01bd2e9f1
+  service:
+    type: NodePort
+    port: 80
+    nodePort: 30000
+
+postgresql:
+  auth:
+    database: shopdb
+    username: postgres
+    password: postgres123
+
+  primary:
+    persistence:
+      enabled: true
+      storageClass: local-path 
+      size: 1Gi
