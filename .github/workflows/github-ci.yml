@@ -22,18 +22,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 🔐 Login to GHCR
       - name: Login to GHCR
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      # 🐳 Build backend
       - name: Build backend image
         run: docker build -t $BACKEND_IMAGE ./backend
 
       - name: Push backend image
         run: docker push $BACKEND_IMAGE
 
-      # 🐳 Build frontend
       - name: Build frontend image
         run: docker build -t $FRONTEND_IMAGE ./frontend
 
@@ -47,19 +44,11 @@ jobs:
 
     steps:
       - name: Setup kubectl
-        uses: azure/setup-kubectl@v4
+        uses: azure/setup-helm@v4
 
-      # ☸️ kubeconfig
-      - name: Setup kubeconfig
+      - name: Deploy
         run: |
-          mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 -d > $HOME/.kube/config
+          helm upgrade --install shop ./devops_chart/ \
+          --set backend.image.tag=$BACKEND_IMAGE \
+          --set backend.image.tag=$FRONTEND_IMAGE -n $KUBE_NAMESPACE
 
-      # 🚀 Deploy backend + frontend
-      - name: Deploy to Kubernetes
-        run: |
-          kubectl set image deployment/backend backend=$BACKEND_IMAGE -n $KUBE_NAMESPACE
-          kubectl set image deployment/frontend frontend=$FRONTEND_IMAGE -n $KUBE_NAMESPACE
-
-          kubectl rollout status deployment/backend -n $KUBE_NAMESPACE
-          kubectl rollout status deployment/frontend -n $KUBE_NAMESPACE
