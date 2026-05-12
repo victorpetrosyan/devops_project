@@ -46,6 +46,10 @@ jobs:
       - name: Setup kubectl
         uses: azure/setup-helm@v4
 
+      - name: Echo
+        run: |
+          id
+
       - name: Deploy
         run: |
           helm upgrade --install shop ./devops_chart/ \
