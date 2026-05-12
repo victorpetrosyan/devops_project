@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/victorpetrosyan/devops_project
-    path: devops_chart
+    path: shop_chart
     targetRevision: main
     helm:
       valueFiles:
