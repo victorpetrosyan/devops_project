@@ -39,8 +39,8 @@ jobs:
 
       - name: Update values.yaml
         run: |
-          yq -i '.backend.image.tag = "${{ github.sha }}"' ./helm/shop-chart/values.yaml
-          yq -i '.frontend.image.tag = "${{ github.sha }}"' ./helm/shop-chart/values.yaml
+          yq -i '.backend.image.tag = "${{ github.sha }}"' ./shop-chart/values.yaml
+          yq -i '.frontend.image.tag = "${{ github.sha }}"' ./shop-chart/values.yaml
 
       - name: Commit updated values
         run: |
