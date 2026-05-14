@@ -26,7 +26,7 @@ const Home = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.hero}>
+      <div className={styles.hero} onClick={()=> alert("Hello Hero!")}>
         <h1>Welcome to DevShopp!!!</h1>
         <p>Quality products, deployed with Kubernetes :D ☸️</p>
       </div>
