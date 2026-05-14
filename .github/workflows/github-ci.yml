@@ -44,10 +44,10 @@ jobs:
 
       - name: Commit updated values
         run: |
-          # git config user.name github-actions
-          # git config user.email github-actions@github.com
+          git config user.name github-actions
+          git config user.email petrosyan.victor05@gmail.com
 
           git add ./shop_chart/values.yaml
-          git commit -m "Update image tag ${IMAGE_TAG}" || echo "No changes"
+          git commit -m "Update image tag ${{ github.sha }}" || echo "No changes"
 
           git push
