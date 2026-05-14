@@ -36,3 +36,18 @@ jobs:
 
       - name: Push frontend image
         run: docker push $FRONTEND_IMAGE:${{ github.sha }}
+
+      - name: Update values.yaml
+        run: |
+          yq -i '.backend.image.tag = "${{ github.sha }}"' ./helm/shop-chart/values.yaml
+          yq -i '.frontend.image.tag = "${{ github.sha }}"' ./helm/shop-chart/values.yaml
+
+      - name: Commit updated values
+        run: |
+          # git config user.name github-actions
+          # git config user.email github-actions@github.com
+
+          git add helm/shop-chart/values.yaml
+          git commit -m "Update image tag ${IMAGE_TAG}" || echo "No changes"
+
+          git push
