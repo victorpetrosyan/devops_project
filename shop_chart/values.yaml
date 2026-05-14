@@ -2,7 +2,7 @@ backend:
   replicaCount: 1
   image:
     repository: ghcr.io/victorpetrosyan/devops_project/backend
-    tag: 9588abb798fe849ad9dcbd764cd07e308942257f
+    tag: 444ecf503275d13d4fe6fd719ba0b15cfbba3ee4
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -14,7 +14,7 @@ frontend:
   replicaCount: 1
   image:
     repository: ghcr.io/victorpetrosyan/devops_project/frontend
-    tag: 9588abb798fe849ad9dcbd764cd07e308942257f
+    tag: 444ecf503275d13d4fe6fd719ba0b15cfbba3ee4
   service:
     type: NodePort
     port: 80
