@@ -1,7 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-frontend
+  name: "{{ .Release.Name }}-frontend"
+  namespace: application
 spec:
   replicas: {{ .Values.frontend.replicaCount }}
   selector:
@@ -34,7 +35,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: frontend-service
-  namespace: shop
+  namespace: application
 spec:
   selector:
     app: frontend

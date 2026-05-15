@@ -1,8 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-backend
-  namespace: shop
+  name: "{{ .Release.Name }}-backend"
+  namespace: application
 spec:
   replicas: {{ .Values.backend.replicaCount }}
   selector:
@@ -53,7 +53,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: backend-service
-  namespace: shop
+  namespace: application
 spec:
   selector:
     app: backend

@@ -1,0 +1,61 @@
+grafana:
+  adminPassword: admin123
+
+  service:
+    type: NodePort
+
+  persistence:
+    enabled: true
+    size: 5Gi
+
+  nodeSelector:
+    role: monitoring
+
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+
+    limits:
+      memory: 512Mi
+      cpu: 500m
+
+
+prometheus:
+  service:
+    type: NodePort
+
+  prometheusSpec:
+    retention: 7d
+
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+
+          resources:
+            requests:
+              storage: 20Gi
+
+  nodeSelector:
+    role: monitoring
+
+  resources:
+    requests:
+      memory: 1Gi
+      cpu: 500m
+
+    limits:
+      memory: 2Gi
+      cpu: 1
+
+
+alertmanager:
+  enabled: true
+
+  service:
+    type: NodePort
+
+  nodeSelector:
+    role: monitoring
