@@ -1,0 +1,10 @@
+postgresql:
+  auth:
+    database: shopdb
+    username: postgres
+    password: postgres123
+  primary:
+    persistence:
+      enabled: true
+      storageClass: local-path
+      size: 1Gi
