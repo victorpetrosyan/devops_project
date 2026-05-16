@@ -6,5 +6,5 @@ postgresql:
   primary:
     persistence:
       enabled: true
-      storageClass: local-path
+      storageClassName: local-path
       size: 1Gi
