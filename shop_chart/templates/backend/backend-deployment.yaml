@@ -31,10 +31,8 @@ spec:
             - name: DB_USER
               value: {{ .Values.postgresql.auth.username }}
             - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: "postgres-postgresql"
-                  key: postgres-password
+              value: {{ .Values.postgresql.auth.password }}
+
           readinessProbe:
             httpGet:
               path: /health
