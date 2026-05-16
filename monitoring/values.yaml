@@ -38,8 +38,8 @@ prometheus:
             requests:
               storage: 20Gi
 
-  nodeSelector:
-    role: monitoring
+    nodeSelector:
+      role: monitoring
 
   resources:
     requests:
