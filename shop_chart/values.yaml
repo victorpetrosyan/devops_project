@@ -29,3 +29,4 @@ postgresql:
       enabled: true
       storageClass: local-path
       size: 1Gi
+  namespaceOverride: application
